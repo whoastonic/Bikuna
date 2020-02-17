@@ -111,3 +111,7 @@ temp/
 .vscode
 
 # End of https://www.gitignore.io/api/node
+
+#Added by cargo
+
+/target
