@@ -1,9 +1,2 @@
-language: rust
-rust:
-  - stable
-  - nightly
-
-install: cargo build --release
-
-script:
-  - ./target/debug/bikuna -V
+language: nodejs
+node_js: 12

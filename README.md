@@ -1,3 +1,5 @@
-# Bikuna 
+# Bikuna TCP Client
 
-A simple terminal-based TCP Client
+Bikuna, is a GUI TCP Client built on top of [Electron]()
+
+## Using Bikuna
