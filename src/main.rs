@@ -39,7 +39,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             if let Err (err) = stream.write(m.as_bytes()).await {
                 eprintln!("Error writing data to server: {:?}", err);
             } else {
-                println!("Wrote over data to server");
+                let mut b = [0; 250];
+
+                stream.read(&mut b).await?;
+
+                let result = std::str::from_utf8(&b).unwrap();
+
+                println!("Got back result: {:?}", result);
             }
         }
     } else {
