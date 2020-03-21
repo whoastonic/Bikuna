@@ -4,7 +4,7 @@ A command-line based TCP client
 
 ## Installation
 
-To install this crate, you can install it from [crates.io]()
+To install this crate, you can install it from [crates.io](https://crates.io/)
 If `cargo` is already installed:
 
 ```bash

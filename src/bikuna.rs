@@ -37,8 +37,7 @@ async fn main() -> modules::BikunaResult<()> {
                         modules::types::BikunaError::Reader(err.to_string())
                     )
                 }
-            } else {
-                if let Some(matched_msg) = matches.value_of("message") {
+            } else if let Some(matched_msg) = matches.value_of("message") {
                     if let Ok(bytes) = stream.write(matched_msg.as_bytes()).await {
                         println!("wrote message to server and {} bytes!", bytes);
                         Ok(())
@@ -47,19 +46,16 @@ async fn main() -> modules::BikunaResult<()> {
                             modules::types::BikunaError::Writer("Fail to write message".to_owned())
                         )
                     }
-                } else {
-                    Err(
-                        modules::types::BikunaError::Input(
-                            "No valid input provided...".to_owned()
-                        )
+            } else {
+                Err(
+                    modules::types::BikunaError::Input(
+                        "No valid input provided...".to_owned()
                     )
-                } 
-            }
+                )
+            } 
         },
         Err(err) => Err(modules::types::BikunaError::Connection(err.to_string()))
-        
     }
- 
 }
 
 fn construct_address(host: &str, port: i32) -> SocketAddr {
