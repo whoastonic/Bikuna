@@ -1,7 +1,0 @@
-{
-    "method": "get",
-    "data": {
-    	"key": "google",
-	"value": "chrome"
-    }
-}

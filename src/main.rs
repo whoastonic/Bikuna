@@ -1,91 +1,76 @@
 extern crate tokio;
 extern crate clap;
 
-use tokio::net::TcpStream;
-use tokio::prelude::*;
-use clap::{App, Arg};
+mod modules;
 
-use std::fs::File;
-use std::io::Read;
+use tokio::io::AsyncWriteExt;
+
 use std::net::SocketAddr;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let mut port = String::new();
+async fn main() -> modules::BikunaResult<()> {
+    let application = modules::app::generate();
+    let matches = application.get_matches();
 
-    let matches = generate_app().get_matches();    
+    let matched_host = matches.args.get("address").unwrap();
+    let matched_port = matches.args.get("port").unwrap();
 
-    let p = matches.value_of("port").unwrap_or("8080");
-    port.push_str(p);
+    let host = matched_host.vals[0].to_str().unwrap();
+    let port = matched_port.vals[0].to_str().unwrap();  
+    let port = parse_port(port);
 
-    let addr: SocketAddr = format!("127.0.0.1:{}", port)
-        .parse()
-        .unwrap();
+    let address = construct_address(host, port);
 
-    if let Ok(mut stream) = TcpStream::connect(&addr).await {
-        if let Some(msg) = matches.value_of("message") {
-            let mut m = String::from(msg);
-
-            if m.starts_with(">") {
-                let segments: Vec<&str> = msg.split(" ").collect();
-
-                let file = segments[1];
-            
-                m = read_file(file);
-            }
-
-            println!("Writing: ({}) over to server", m);
-
-            if let Err (err) = stream.write(m.as_bytes()).await {
-                eprintln!("Error writing data to server: {:?}", err);
+    match modules::client::connect(address).await {
+        Ok(mut stream) => {
+            if let Some(matched_file) = matches.value_of("file") {
+                match modules::file_reader::read(matched_file) {
+                    Ok(buff) => if let Ok(bytes) = stream.write(buff.as_bytes()).await {
+                        println!("wrote message to server and {} bytes!", bytes);
+                        Ok(())
+                    } else {
+                        Err(
+                            modules::types::BikunaError::Writer("Fail to write message".to_owned())
+                        )
+                    },
+                    Err(err) => Err(
+                        modules::types::BikunaError::Reader(err.to_string())
+                    )
+                }
             } else {
-                let mut b = [0; 250];
-
-                stream.read(&mut b).await?;
-
-                let result = std::str::from_utf8(&b).unwrap();
-
-                println!("Got back result: {:?}", result);
+                if let Some(matched_msg) = matches.value_of("message") {
+                    if let Ok(bytes) = stream.write(matched_msg.as_bytes()).await {
+                        println!("wrote message to server and {} bytes!", bytes);
+                        Ok(())
+                    } else {
+                        Err(
+                            modules::types::BikunaError::Writer("Fail to write message".to_owned())
+                        )
+                    }
+                } else {
+                    Err(
+                        modules::types::BikunaError::Input(
+                            "No valid input provided...".to_owned()
+                        )
+                    )
+                } 
             }
-        }
-    } else {
-        println!("Unable to connect to this socket, are you sure it's open?")
+        },
+        Err(err) => Err(modules::types::BikunaError::Connection(err.to_string()))
+        
     }
-
-    Ok(())
+ 
 }
 
-fn read_file(file: &str) -> String {
-    let mut contents = String::new();
-    let mut file = File::open(file).unwrap();
+fn construct_address(host: &str, port: i32) -> SocketAddr {
+    let address = format!("{}:{}", host, port);
 
-    file.read_to_string(&mut contents)
-        .expect("Cannot read file to string");
-
-    dbg!(&contents);
-
-    contents
+    let sock_addr: SocketAddr = address.parse()
+        .expect("Invalid Address");
+    
+    sock_addr
 }
 
-fn generate_app<'a, 'b>() -> App<'a, 'b> {
-    App::new("Bikuna")
-        .version("0.1.0")
-        .author("whoastonic <kingstonicthe1@gmail.com>")
-        .about("Doing stupid, lazy and pointless stuff")
-        .arg(
-            Arg::with_name("port")
-                .short("p")
-                .long("port")
-                .value_name("PORT")
-                .help("Connect to socket server")
-                .takes_value(true)
-        )
-        .arg(
-            Arg::with_name("message")
-                .short("m")
-                .long("msg")
-                .value_name("MESSAGE")
-                .help("Write via message to stream")
-                .takes_value(true)  
-        )
+fn parse_port(port: &str) -> i32 {
+    port.parse::<i32>().expect("Invalid port")
 }
