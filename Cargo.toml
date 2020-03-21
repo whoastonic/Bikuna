@@ -8,7 +8,7 @@ edition = "2018"
 
 [[bin]]
 name = "bikuna"
-path = "src/main.rs"
+path = "src/bikuna.rs"
 
 [dependencies]
 bytes = "0.5.4"
