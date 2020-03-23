@@ -1,6 +1,6 @@
 [package]
 name = "bikuna"
-version = "0.1.0"
+version = "0.1.1"
 description = "simple TCP CLI client"
 authors = ["whoastonic <kingstonicthe1@gmail.com>"]
 repository = "https://github.com/whoastonic/Bikuna"
