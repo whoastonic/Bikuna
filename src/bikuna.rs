@@ -4,6 +4,7 @@ extern crate clap;
 mod modules;
 
 use tokio::io::AsyncWriteExt;
+use tokio::io::AsyncReadExt;
 
 use std::net::SocketAddr;
 
@@ -39,8 +40,21 @@ async fn main() -> modules::BikunaResult<()> {
                 }
             } else if let Some(matched_msg) = matches.value_of("message") {
                     if let Ok(bytes) = stream.write(matched_msg.as_bytes()).await {
+                        let mut buff: Vec<u8> = Vec::new();
+
                         println!("wrote message to server and {} bytes!", bytes);
-                        Ok(())
+
+                        if let Ok(_) = stream.read(&mut buff).await {
+                            println!("read data from server:\n{:?}", buff);
+
+                            Ok(())
+                        } else {
+                            Err(
+                                modules::types::BikunaError::Reader(
+                                    "Fail to read from server".to_owned()
+                                )
+                            )
+                        }
                     } else {
                         Err(
                             modules::types::BikunaError::Writer("Fail to write message".to_owned())
