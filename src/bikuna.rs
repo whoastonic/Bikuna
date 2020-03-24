@@ -15,7 +15,6 @@ mod optionals;
 use tokio::io::AsyncWriteExt;
 use tokio::io::AsyncReadExt;
 use tokio::net::TcpStream;
-use tokio::sync::Mutex;
 
 use utils::*;
 
@@ -76,10 +75,6 @@ async fn main() -> modules::BikunaResult<()> {
     //                 )
     //             )
     //         }      
-}
-
-async fn execute_cmd(query: &str) {
-
 }
 
 async fn forge_conn(address: SocketAddr) -> modules::BikunaResult<TcpStream> {
