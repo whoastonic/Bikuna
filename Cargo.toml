@@ -14,11 +14,18 @@ categories = ["command-line-utilities"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [[bin]]
+test = true
 name = "bikuna"
 path = "src/bikuna.rs"
 
+[features]
+default = ["logger"]
+logger = ["log", "colored", "chrono"]
+
 [dependencies]
-bytes = "0.5.4"
+log = { verison = "0.4.8", features = ["std"], optional = true }
+colored = { verison = "1.9.3", optional = true }
+chrono = { verison = "0.4.11", optional = true }
 
 [dependencies.serde]
 version = "1.0.105"
