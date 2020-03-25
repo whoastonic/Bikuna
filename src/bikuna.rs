@@ -43,21 +43,20 @@ async fn main() -> modules::BikunaResult<()> {
     if matches.is_present("attach") {
         thread::sleep(Duration::from_millis(5000));
         Ok(())
-    } else {
-        if let Some(file) = matches.value_of("file") {
+    } else if let Some(file) = matches.value_of("file") {
             let file_buff = modules::file_reader::read(file)?;
 
             write_message(&mut stream, file_buff.as_bytes()).await
-        } else if let Some(msg) = matches.value_of("message") {
+    } else if let Some(msg) = matches.value_of("message") {
             write_message(&mut stream, msg.as_bytes()).await
-        } else {
-            Err(
-                modules::types::BikunaError::Input(
-                    "Invalid Input...".to_owned()
-                )
+    } else {
+        Err(
+            modules::types::BikunaError::Input(
+                "Invalid Input...".to_owned()
             )
-        }
+        )
     }
+    
     // let address = construct_address(host, port);
     //     if let Some(matched_file) = matches.value_of("file") {
     //             match modules::file_reader::read(matched_file) {
