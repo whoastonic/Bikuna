@@ -1,5 +1,7 @@
 # Bikuna TCP
 
+[![Build Status](https://travis-ci.com/whoastonic/Bikuna.svg?branch=master)](https://travis-ci.com/whoastonic/Bikuna)
+
 A command-line based TCP client
 
 ## Installation
