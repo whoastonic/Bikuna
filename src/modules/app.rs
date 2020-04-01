@@ -12,7 +12,7 @@ pub fn generate<'a, 'b>() -> App<'a, 'b> {
                 .value_name("ADDRESS")
                 .default_value("127.0.0.1")
                 .help("Suppy address to connection opts [ DEFAULTS TO 127.0.0.1 ]")
-                .takes_value(true)
+                .takes_value(true),
         )
         .arg(
             Arg::with_name("port")
@@ -21,32 +21,40 @@ pub fn generate<'a, 'b>() -> App<'a, 'b> {
                 .value_name("PORT")
                 .help("Supply port to connection opts")
                 .takes_value(true)
-                .required(true)
+                .required(true),
         )
         .arg(
             Arg::with_name("message")
                 .short("m")
                 .long("message")
                 .value_name("MESSAGE")
-                .required_unless("file")
+                .required_unless_one(&["file", "attach"])
                 .help("Write via message to stream")
-                .takes_value(true)
+                .takes_value(true),
+        )
+        .arg(
+            Arg::with_name("force_read")
+                .short("r")
+                .long("force_read")
+                .value_name("FORCE_READ")
+                .takes_value(false)
+                .help("Will wait until server sends back a response...")
         )
         .arg(
             Arg::with_name("file")
                 .short("f")
                 .long("file")
                 .value_name("FILE")
-                .required_unless("message")
+                .required_unless_one(&["file", "attach"])
                 .help("Writes a file to stream")
-                .takes_value(true)
+                .takes_value(true),
         )
         .arg(
             Arg::with_name("attach")
-                .short("at")
+                .short("s")
                 .long("attach")
                 .value_name("ATTACH")
                 .help("Attaches to TCP client sesssion, until connection closes")
-                .takes_value(false)
+                .takes_value(false),
         )
 }

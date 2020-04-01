@@ -7,7 +7,6 @@ repository = "https://github.com/whoastonic/Bikuna"
 readme = "README.md"
 edition = "2018"
 license = "MIT"
-license-file = "LICENSE"
 keywords = ["tcp", "cli", "client"]
 categories = ["command-line-utilities"]
 

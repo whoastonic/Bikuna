@@ -1,10 +1,9 @@
-use log::SetLoggerError;
-use colored::Colorize;
 use chrono::Local;
-
+use colored::Colorize;
+use log::SetLoggerError;
 
 pub struct BikunaLogger {
-    max_level: log::LevelFilter
+    max_level: log::LevelFilter,
 }
 
 impl log::Log for BikunaLogger {
@@ -25,8 +24,8 @@ impl log::Log for BikunaLogger {
                 log::Level::Debug => record.level().to_string().purple(),
                 log::Level::Trace => record.level().to_string().normal(),
             };
-             
-            let target = if record.target().len() > 0 {
+
+            let target = if !record.target().is_empty() {
                 record.target()
             } else {
                 record.module_path().unwrap_or_default()
@@ -48,13 +47,13 @@ impl log::Log for BikunaLogger {
 impl Default for BikunaLogger {
     fn default() -> BikunaLogger {
         BikunaLogger {
-            max_level: log::LevelFilter::Debug 
+            max_level: log::LevelFilter::Debug,
         }
     }
 }
 
 pub fn enable() -> Result<(), SetLoggerError> {
-    let logger = BikunaLogger::default();    
+    let logger = BikunaLogger::default();
     log::set_max_level(logger.max_level);
     log::set_boxed_logger(Box::new(logger))
 }
