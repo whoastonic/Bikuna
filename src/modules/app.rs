@@ -6,12 +6,12 @@ pub fn generate<'a, 'b>() -> App<'a, 'b> {
         .author("whoastonic <kingstonicthe1@gmail.com>")
         .about("Simple TCP client CLI for basic messaging...")
         .arg(
-            Arg::with_name("address")
-                .short("a")
-                .long("address")
-                .value_name("ADDRESS")
+            Arg::with_name("host")
+                .short("h")
+                .long("host")
+                .value_name("HOST")
                 .default_value("127.0.0.1")
-                .help("Suppy address to connection opts [ DEFAULTS TO 127.0.0.1 ]")
+                .help("Supply a host to connection opts")
                 .takes_value(true),
         )
         .arg(
@@ -51,7 +51,7 @@ pub fn generate<'a, 'b>() -> App<'a, 'b> {
         )
         .arg(
             Arg::with_name("attach")
-                .short("s")
+                .short("a")
                 .long("attach")
                 .value_name("ATTACH")
                 .help("Attaches to TCP client sesssion, until connection closes")

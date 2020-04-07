@@ -7,6 +7,8 @@ extern crate clap;
 #[cfg(feature = "logger")]
 extern crate colored;
 extern crate tokio;
+#[cfg(feature = "host")]
+extern crate trust_dns_resolver;
 
 mod modules;
 mod optionals;
