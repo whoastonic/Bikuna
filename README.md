@@ -1,31 +1,43 @@
-# Bikuna TCP
+# kuna
 
-[![Build Status](https://travis-ci.com/whoastonic/Bikuna.svg?branch=master)](https://travis-ci.com/whoastonic/Bikuna)
+yet another HTTP client that's stuck in the terminal...
 
-A command-line based TCP client
-
-## Installation
-
-To install this crate, you can install it from [crates.io](https://crates.io/)
-If `cargo` is already installed:
+## Install
 
 ```bash
-$ cargo install bikuna
+$ cargo install kuna
 ```
 
 ## Usage
 
 ```bash
-# connecting & writing
-# if the IP address wasn't specified 
-# it'll default to 127.0.0.1
-# but port is required
+### GET REQUESTS ###
 
-$ bikuna -p 3000 -m "Hello, Server!"
+# GET request to URL:
+$ kuna http://example.com
+
+# GET request to URL (+ output file):
+$ kuna http://example.com -o path/to/file.txt
+
+### POST REQUESTS ###
+
+# POST request to URL (no body):
+# provides an empty payload instead
+$ kuna -m POST http://example.com
+
+# POST request to URL (+ body):
+$ kuna -m POST -p "hello-server?" http://example.com
+
+# POST request to URL (file payload):
+$ kuna -m POST -p "/path/to/payload.json" http://example.com
+
+### DELETE REQUESTS ###
+
+# DELETE request to URL:
+## takes the same params as POST Requests
+$ kuna -m DELETE http://example.com
 ```
 
-Connects Bikuna to `tcp://127.0.0.1:3000` and writes *"Hello, Server"* to the server
+## Support & Goals
 
-## Extra support
-
-If you need additional support join the [Discord](https://discordapp.com/invite/eqwAFJW)
+If'll like to know where this project is heading, or wanna help out in some way or form... join the [Discord](https://discord.com/invite/PjRbWMH) there you can ask questions about the library and how you can help or recieve help on an issue ;D

@@ -1,0 +1,17 @@
+name: build and test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses:
+  test:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+
