@@ -7,9 +7,9 @@ mod modules;
 
 use std::default::Default;
 
+pub use lib_kuna::http_client;
 use modules::parse_matches;
 use modules::clap_config as app;
-use lib_kuna::khttp as mini_http;
 use hyper::body::HttpBody as _;
 
 #[tokio::main]

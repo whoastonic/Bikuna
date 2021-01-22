@@ -5,7 +5,7 @@ extern crate serde_json;
 use serde::{Serialize, Deserialize};
 
 use std::default::Default;
-use lib_kuna::khttp;
+use lib_kuna::http_client;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct RequestBody {
@@ -21,7 +21,7 @@ impl RequestBody {
 
 #[test]
 fn get_request () {
-  let future = khttp::request("https://example.com", khttp::RequestState {
+  let future = http_client::request("https://example.com", khttp::RequestState {
 		..Default::default()
 	});
 
@@ -42,7 +42,7 @@ fn post_request () {
 		RequestBody::new((String::from("anime"), String::from("girl")))
 	);
 
-	let future = khttp::request("https://jsonplaceholder.typicode.com/posts", khttp::RequestState {
+	let future = http_client::request("https://jsonplaceholder.typicode.com/posts", khttp::RequestState {
 		method: b"post",
 		payload: Some(request_body),
 		..Default::default()

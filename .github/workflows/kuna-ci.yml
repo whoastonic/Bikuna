@@ -2,16 +2,53 @@ name: build and test
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses:
+      - uses: actions/checkout@v2
+      - name: Install latest stable
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      - name: Release build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --all-features
   test:
     needs: [ build ]
     runs-on: ubuntu-latest
-
+    steps:
+        - uses: actions/checkout@v2
+        - name: Install latest stable
+          uses: actions-rs/toolchain@v1
+          with:
+            toolchain: stable
+            override: true
+        - name: Testing build
+          uses: actions-rs/cargo@v1
+          with:
+            command: test
+            args: --all-features
+  clippy-check:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install latest stable
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          components: clippy
+      - name: Clippy check (fail if warned)
+        uses: actions-rs/clippy-check
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: -- -D warnings --all-features
