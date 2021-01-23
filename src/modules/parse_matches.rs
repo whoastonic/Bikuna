@@ -8,7 +8,7 @@ pub struct ParsedMatches {
 	pub output: Option<PathBuf>,
 }
 
-pub fn parse<'a> (incoming_matches: clap::ArgMatches<'a>) -> ParsedMatches {
+pub fn parse (incoming_matches: clap::ArgMatches<'_>) -> ParsedMatches {
   let url = incoming_matches.value_of("INPUT")
     .expect("INVALID URL / NO URL PROVIDED!");
 
