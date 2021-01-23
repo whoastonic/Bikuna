@@ -6,6 +6,7 @@ use serde::{Serialize, Deserialize};
 
 use std::default::Default;
 use lib_kuna::http_client;
+use http_client::RequestState;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct RequestBody {
@@ -21,7 +22,7 @@ impl RequestBody {
 
 #[test]
 fn get_request () {
-  let future = http_client::request("https://example.com", khttp::RequestState {
+  let future = http_client::request("https://example.com", RequestState {
 		..Default::default()
 	});
 
@@ -42,7 +43,7 @@ fn post_request () {
 		RequestBody::new((String::from("anime"), String::from("girl")))
 	);
 
-	let future = http_client::request("https://jsonplaceholder.typicode.com/posts", khttp::RequestState {
+	let future = http_client::request("https://jsonplaceholder.typicode.com/posts", RequestState {
 		method: b"post",
 		payload: Some(request_body),
 		..Default::default()
@@ -57,6 +58,12 @@ fn post_request () {
 	});
 
 	assert!(success)
+}
+
+#[test]
+fn post_with_file_request () {
+
+
 }
 
 fn body_to_string<T: Serialize> (body: T) -> String {

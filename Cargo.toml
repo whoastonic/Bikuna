@@ -25,6 +25,10 @@ path = "src/lib/kuna.rs"
 name = "http"
 path = "tests/http.rs"
 
+[[tests]]
+name = "file_system"
+path = "tests/fs.rs"
+
 [features]
 # ENABLED BY DEFAULT
 default = ["https"]
@@ -33,6 +37,7 @@ default = ["https"]
 https = ["hyper-tls"]
 
 [dependencies]
+chrono = "0.4"
 http = "0.2.3"
 hyper-tls = { version = "0.5.0", optional = true }
 tokio = { version = "1.0.2", features = ["full"] }

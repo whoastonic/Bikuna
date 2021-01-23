@@ -7,19 +7,19 @@ type ManResult<T> = io::Result<T>;
 pub fn write(path: &Path, bytes: &[u8]) -> ManResult<()> {
 	match OpenOptions::new().write(true).create(true).open(path) {
 		Ok(mut file) => {
-			file.write(bytes)?;
+			file.write_all(bytes)?;
 			Ok(())
 		}
 		Err(error) => Err(build_error_message(error, None)),
 	}
 }
 
-pub fn read(path: &Path) -> ManResult<Vec<u8>> {
+pub fn read(path: &Path) -> ManResult<String> {
 	match OpenOptions::new().read(true).open(path) {
 		Ok(mut file) => {
-			let mut contents = Vec::<u8>::new();
+			let mut contents = String::new();
 
-			file.read_to_end(&mut contents)?;
+			file.read_to_string(&mut contents)?;
 
 			Ok(contents)
 		}

@@ -1,8 +1,11 @@
+use std::path::Path;
 use std::str::FromStr;
 use std::default::Default;
 #[cfg(feature = "https")]
 use hyper_tls::HttpsConnector;
 use hyper::client::HttpConnector;
+
+use crate::utils::file_man as fs;
 
 pub type MiniResponse = http::Result<http::Response<hyper::Body>>;
 #[cfg(feature = "https")]
@@ -35,16 +38,18 @@ pub async fn request (
 ) -> MiniResponse {
 	if let Ok(request_url) = hyper::Uri::from_str(url) {
 
-		let method = match std::str::from_utf8(state.method) {
-			Ok(meth) => meth,
-			Err(_) => "",
-		};
+		let method = std::str::from_utf8(state.method)
+			.unwrap_or("");
 
 		let request = hyper::Request::builder()
 			.uri(request_url)
 			.method(method_from_str(method))
 			.body(if let Some(body) = state.payload {
-				hyper::Body::from(body)
+				if let Ok (contents) = fs::read(Path::new(&body)) {
+					hyper::Body::from(contents)
+				} else {
+					hyper::Body::from(body)
+				}
 			} else {
 				hyper::Body::empty()
 			})

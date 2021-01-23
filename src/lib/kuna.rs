@@ -5,6 +5,6 @@ extern crate log;
 extern crate http;
 extern crate tokio;
 
-pub mod http_client;
 mod utils;
 pub use utils::*;
+pub mod http_client;
